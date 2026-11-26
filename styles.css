@@ -251,3 +251,23 @@ h1, h2 { font-family: var(--serif); font-weight: 650; letter-spacing: -0.015em; 
   .stat:nth-child(odd) { padding-left: 0; border-left: 0; }
   .stat-num { font-size: 32px; }
 }
+
+
+/* ---------- Headshot ---------- */
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 56px;
+  align-items: center;
+}
+.hero-text h1 { font-size: clamp(38px, 5vw, 60px); }
+.headshot {
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 6px var(--card), 0 0 0 7px var(--line);
+}
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .headshot { order: -1; width: 140px; height: 140px; }
+}
