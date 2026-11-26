@@ -69,7 +69,7 @@ h1, h2 { font-family: var(--serif); font-weight: 650; letter-spacing: -0.015em; 
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; }
 .brand-mark {
   display: grid; place-items: center; width: 34px; height: 34px;
-  border-radius: 9px; background: var(--ink); color: var(--paper);
+  border-radius: 9px; background: var(--accent); color: var(--paper);
   font: 500 13px/1 var(--mono); letter-spacing: .02em;
 }
 .site-nav { display: flex; align-items: center; gap: 28px; }
@@ -271,3 +271,127 @@ h1, h2 { font-family: var(--serif); font-weight: 650; letter-spacing: -0.015em; 
   .hero-grid { grid-template-columns: 1fr; gap: 32px; }
   .headshot { order: -1; width: 140px; height: 140px; }
 }
+
+/* ---------- Animated DMAIC strip ---------- */
+.flow { --step: 2s; }   /* time per step; raise to slow it down */
+
+/* Progress line that travels across the strip */
+.flow::after {
+  content: ""; position: absolute; left: 0; top: 19px; height: 2px; width: 0;
+  background: var(--accent);
+  animation: flow-line calc(var(--step) * 5) linear infinite;
+}
+@keyframes flow-line {
+  0%   { width: 0; opacity: 1; }
+  80%  { width: calc(80% + 8px); opacity: 1; }
+  100% { width: calc(80% + 8px); opacity: 0; }
+}
+
+/* Dots light up one at a time as the line reaches them */
+.flow li::before { z-index: 1; }
+.flow li:last-child::before { background: var(--paper); border-color: var(--ink); }
+.flow li,
+.flow li::before {
+  animation-duration: calc(var(--step) * 5);
+  animation-iteration-count: infinite;
+}
+.flow li::before { animation-name: flow-dot; }
+.flow li         { animation-name: flow-label; }
+.flow li:nth-child(2), .flow li:nth-child(2)::before { animation-delay: calc(var(--step) * 1); }
+.flow li:nth-child(3), .flow li:nth-child(3)::before { animation-delay: calc(var(--step) * 2); }
+.flow li:nth-child(4), .flow li:nth-child(4)::before { animation-delay: calc(var(--step) * 3); }
+.flow li:nth-child(5), .flow li:nth-child(5)::before { animation-delay: calc(var(--step) * 4); }
+
+@keyframes flow-dot {
+  0%, 15%   { background: var(--accent); border-color: var(--accent); transform: scale(1.3); }
+  22%, 100% { background: var(--paper);  border-color: var(--ink);    transform: scale(1); }
+}
+@keyframes flow-label {
+  0%, 15%   { color: var(--accent); }
+  22%, 100% { color: var(--ink-2); }
+}
+
+/* Phones: the strip is vertical there, so skip the horizontal line */
+@media (max-width: 720px) {
+  .flow::after { display: none; }
+}
+
+/* Respect users who've turned off motion in their OS settings */
+@media (prefers-reduced-motion: reduce) {
+  .flow::after, .flow li, .flow li::before { animation: none; }
+}
+
+/* ---------- How I work strip ---------- */
+.flow-section { padding: 0 0 96px; }
+.flow-section .flow { margin-top: 8px; }
+@media (max-width: 720px) {
+  .flow-section { padding-bottom: 72px; }
+}
+
+/* ---------- DMAIC dots: idle → active → done ---------- */
+.flow li:nth-child(1)::before { animation-name: flow-dot-1; animation-delay: 0s; }
+.flow li:nth-child(2)::before { animation-name: flow-dot-2; animation-delay: 0s; }
+.flow li:nth-child(3)::before { animation-name: flow-dot-3; animation-delay: 0s; }
+.flow li:nth-child(4)::before { animation-name: flow-dot-4; animation-delay: 0s; }
+.flow li:nth-child(5)::before { animation-name: flow-dot-5; animation-delay: 0s; }
+
+/* idle  = background fill, dark ring
+   active = orange, slightly larger
+   done  = grey */
+@keyframes flow-dot-1 {
+  0%, 15%   { background: var(--accent); border-color: var(--accent); transform: scale(1.3); }
+  20%, 94%  { background: var(--line);  border-color: var(--muted);  transform: scale(1); }
+  100%      { background: var(--paper);  border-color: var(--ink);    transform: scale(1); }
+}
+@keyframes flow-dot-2 {
+  0%, 18%   { background: var(--paper);  border-color: var(--ink);    transform: scale(1); }
+  20%, 35%  { background: var(--accent); border-color: var(--accent); transform: scale(1.3); }
+  40%, 94%  { background: var(--line);  border-color: var(--muted);  transform: scale(1); }
+  100%      { background: var(--paper);  border-color: var(--ink);    transform: scale(1); }
+}
+@keyframes flow-dot-3 {
+  0%, 38%   { background: var(--paper);  border-color: var(--ink);    transform: scale(1); }
+  40%, 55%  { background: var(--accent); border-color: var(--accent); transform: scale(1.3); }
+  60%, 94%  { background: var(--line);  border-color: var(--muted);  transform: scale(1); }
+  100%      { background: var(--paper);  border-color: var(--ink);    transform: scale(1); }
+}
+@keyframes flow-dot-4 {
+  0%, 58%   { background: var(--paper);  border-color: var(--ink);    transform: scale(1); }
+  60%, 75%  { background: var(--accent); border-color: var(--accent); transform: scale(1.3); }
+  80%, 94%  { background: var(--line);  border-color: var(--muted);  transform: scale(1); }
+  100%      { background: var(--paper);  border-color: var(--ink);    transform: scale(1); }
+}
+@keyframes flow-dot-5 {
+  0%, 78%   { background: var(--paper);  border-color: var(--ink);    transform: scale(1); }
+  80%, 95%  { background: var(--accent); border-color: var(--accent); transform: scale(1.3); }
+  100%      { background: var(--paper);  border-color: var(--ink);    transform: scale(1); }
+}
+
+/* ---------- Award badge ---------- */
+.award {
+  display: inline-flex; align-items: center; gap: 14px;
+  margin: 0 0 20px; padding: 12px 15px 12px 12px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+}
+.award-icon {
+  flex: none; display: grid; place-items: center;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent); font-size: 20px;
+}
+.award-text strong { display: block; font-size: 15px; font-weight: 600; }
+.award-quarters {
+  list-style: none; padding: 0; margin: 6px 0 0;
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.award-quarters li {
+  font: 500 12px/1 var(--mono); color: var(--ink-2);
+  padding: 5px 9px; border-radius: 999px; background: var(--paper-2);
+}
+
+.job-meta .award-quarters {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* .job-meta .award { align-items: flex-start; } */
